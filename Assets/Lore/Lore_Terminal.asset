@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a26440ceb68d5547b89c71e43fb07e9, type: 3}
+  m_Name: Lore_Terminal
+  m_EditorClassIdentifier: 
+  objectId: terminal_zona1
+  title: Apa itu CLI
+  bodyText: CLI (Command Line Interface) adalah cara berinteraksi dengan komputer
+    lewat perintah teks, bukan klik-klik. Teknisi sering pakai CLI untuk mengontrol
+    sistem secara langsung dan cepat.
+  hasSpecialAnimation: 0

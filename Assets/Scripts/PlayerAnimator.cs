@@ -7,7 +7,7 @@ public class PlayerAnimator : MonoBehaviour
     private PlayerMovement movement;
 
     private static readonly int SpeedHash     = Animator.StringToHash("Speed");
-    private static readonly int IsRunningHash = Animator.StringToHash("IsRunning"); // ← tambah
+    private static readonly int IsRunningHash = Animator.StringToHash("IsRunning");
 
     void Start()
     {
@@ -16,7 +16,12 @@ public class PlayerAnimator : MonoBehaviour
 
     void Update()
     {
-        animator.SetFloat(SpeedHash,     movement.GetSpeed(), 0.1f, Time.deltaTime);
-        animator.SetBool(IsRunningHash,  movement.IsRunning()); // ← tambah
+        float speed = movement.GetSpeed();
+
+        // Paksa 0 kalau sudah sangat pelan — hilangkan delay berhenti
+        if (speed < 1f) speed = 0f;
+
+        animator.SetFloat(SpeedHash, speed, 0.05f, Time.deltaTime);
+        animator.SetBool(IsRunningHash, movement.IsRunning());
     }
 }

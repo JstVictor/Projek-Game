@@ -2,49 +2,54 @@ using UnityEngine;
 
 public class ThirdPersonCamera : MonoBehaviour
 {
-    [Header("References")]
-    public Transform target; // Masukkan objek 'CameraTarget' ke sini di Inspector
+    [Header("Target")]
+    public Transform target;
 
-    [Header("Camera Settings")]
-    public float distance = 4.0f;      // Jarak kamera dari karakter
-    public float mouseSensitivity = 3f; // Kecepatan rotasi kamera
+    [Header("Posisi")]
+    public float distance      = 5f;
+    public float heightOffset  = 1.8f;
+    public float shoulderOffset = 0.5f;
 
-    [Header("Limits")]
-    public float pitchMin = -10f;     // Batas sudut kamera saat melihat ke atas
-    public float pitchMax = 60f;      // Batas sudut kamera saat melihat ke bawah
+    [Header("Mouse")]
+    public float sensitivity = 2f;
+    public float minY = -15f;
+    public float maxY =  60f;
 
-    private float yaw;   // Rotasi sumbu X (Kiri-Kanan)
-    private float pitch; // Rotasi sumbu Y (Atas-Bawah)
+    private float yaw;
+    private float pitch = 10f;
 
     void Start()
     {
-        // Mengambil rotasi awal kamera saat game dimulai
-        Vector3 angles = transform.eulerAngles;
-        yaw = angles.y;
-        pitch = angles.x;
+        yaw   = transform.eulerAngles.y;
+        pitch = 10f;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible   = false;
     }
 
-    // Menggunakan LateUpdate adalah standar industri untuk kamera
-    // agar kamera bergerak SETELAH karakter selesai bergerak di fungsi Update
     void LateUpdate()
     {
-        if (!target) return;
+        // Kalau target kosong, stop — ini penyebab kamera diam
+        if (target == null)
+        {
+            Debug.LogWarning("ThirdPersonCamera: Target belum diassign!");
+            return;
+        }
 
-        // 1. Ambil input dari pergerakan mouse
-        yaw += Input.GetAxis("Mouse X") * mouseSensitivity;
-        pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity;
+        float mouseX = Input.GetAxis("Mouse X");
+        float mouseY = Input.GetAxis("Mouse Y");
 
-        // 2. Batasi rotasi vertikal (pitch) agar kamera tidak berputar terbalik ke bawah lantai
-        pitch = Mathf.Clamp(pitch, pitchMin, pitchMax);
+        yaw   += mouseX * sensitivity;
+        pitch -= mouseY * sensitivity;
+        pitch  = Mathf.Clamp(pitch, minY, maxY);
 
-        // 3. Hitung rotasi dan posisi baru kamera
-        Quaternion targetRotation = Quaternion.Euler(pitch, yaw, 0);
-        
-        // Kamera memposisikan diri di belakang target berdasarkan jarak (distance)
-        Vector3 targetPosition = target.position - (targetRotation * Vector3.forward * distance);
+        Debug.Log($"[ThirdPersonCamera] MouseX: {mouseX:F3}, MouseY: {mouseY:F3}, Yaw: {yaw:F1}, Pitch: {pitch:F1}, CamPos: {transform.position}");
 
-        // 4. Terapkan posisi dan rotasi secara mulus ke Main Camera
-        transform.rotation = targetRotation;
-        transform.position = targetPosition;
+        Vector3 focusPoint = target.position + Vector3.up * heightOffset;
+
+        Quaternion rotation = Quaternion.Euler(pitch, yaw, 0f);
+        Vector3 finalPos    = focusPoint + rotation * new Vector3(0f, 0f, -distance);
+
+        transform.position = Vector3.Lerp(transform.position, finalPos, Time.deltaTime * 15f);
+        transform.LookAt(focusPoint);
     }
 }
