@@ -7,6 +7,7 @@ TagManager:
   - RepairObject
   - Cable
   - Component
+  - CablePort
   layers:
   - Default
   - TransparentFX
@@ -17,9 +18,9 @@ TagManager:
   - Repairable
   - 'Ground  '
   - Virus
-  - 
-  - 
-  - 
+  - Interactable
+  - HardwarePart
+  - HardwareSlot
   - 
   - 
   - 

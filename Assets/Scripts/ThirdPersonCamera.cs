@@ -42,8 +42,6 @@ public class ThirdPersonCamera : MonoBehaviour
         pitch -= mouseY * sensitivity;
         pitch  = Mathf.Clamp(pitch, minY, maxY);
 
-        Debug.Log($"[ThirdPersonCamera] MouseX: {mouseX:F3}, MouseY: {mouseY:F3}, Yaw: {yaw:F1}, Pitch: {pitch:F1}, CamPos: {transform.position}");
-
         Vector3 focusPoint = target.position + Vector3.up * heightOffset;
 
         Quaternion rotation = Quaternion.Euler(pitch, yaw, 0f);
